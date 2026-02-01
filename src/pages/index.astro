@@ -1,7 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { Target, Users, Globe, BarChart3, ArrowRight } from 'lucide-svelte';
+import { Target, Users, Globe, BarChart3, ArrowRight } from '@lucide/svelte';
 import { buttonVariants } from '@/lib/components/ui/button';
+import { Badge } from '@/lib/components/ui/badge';
 ---
 
 <BaseLayout title="Home">
@@ -54,18 +55,18 @@ import { buttonVariants } from '@/lib/components/ui/button';
       </a>
 
       <!-- Customer AI -->
-      <div class="group p-8 rounded-3xl bg-slate-900/40 border border-slate-800/50 hover:border-blue-500/40 hover:bg-slate-900/60 transition-all opacity-60">
-        <div class="w-12 h-12 rounded-2xl bg-slate-800 flex items-center justify-center text-slate-400 mb-6 group-hover:scale-110 transition-transform">
+      <a href="/customer" class="group p-8 rounded-3xl bg-slate-900/40 border border-slate-800/50 hover:border-blue-500/40 hover:bg-slate-900/60 transition-all">
+        <div class="w-12 h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-400 mb-6 group-hover:scale-110 transition-transform">
           <Users class="w-6 h-6" />
         </div>
         <div class="flex items-center gap-2 mb-2">
           <h3 class="text-xl font-bold text-white">Customer AI</h3>
-          <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-500">SOON</span>
+          <Badge variant="outline" class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 border-blue-500/20 uppercase">Module 02</Badge>
         </div>
         <p class="text-slate-500 text-sm leading-relaxed">
           Advanced buyer persona generation and behavioral analysis powered by LLMs.
         </p>
-      </div>
+      </a>
 
       <!-- Digital Strategy -->
       <div class="group p-8 rounded-3xl bg-slate-900/40 border border-slate-800/50 hover:border-blue-500/40 hover:bg-slate-900/60 transition-all opacity-60">

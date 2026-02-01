@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { engineStore } from '../../../lib/stores/engineStore';
   import type { SwotData } from '../types';
   import * as Card from "@/lib/components/ui/card";
   import { Button } from "@/lib/components/ui/button";
@@ -7,16 +7,7 @@
   import { Badge } from "@/lib/components/ui/badge";
   import { Plus, Trash2, Target, Zap, TriangleAlert, TrendingUp, Download } from "@lucide/svelte";
 
-  let { 
-    data: initialData
-  }: { data?: SwotData } = $props();
-
-  let data = $state(initialData || {
-    strengths: [],
-    weaknesses: [],
-    opportunities: [],
-    threats: []
-  });
+  let data = $derived($engineStore.strategy.swot);
 
   let newItem = $state("");
   let activeQuadrant: { value: keyof SwotData; label: string } = $state({ value: "strengths", label: "Strengths" });
@@ -28,37 +19,20 @@
     threats: { color: "text-rose-400", icon: Target, bg: "bg-rose-500/10", label: "Threats" }
   };
 
-  onMount(() => {
-    const saved = localStorage.getItem('marketing-engine-swot');
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        data.strengths = parsed.strengths || [];
-        data.weaknesses = parsed.weaknesses || [];
-        data.opportunities = parsed.opportunities || [];
-        data.threats = parsed.threats || [];
-      } catch (e) {
-        console.error("Failed to load SWOT data", e);
-      }
-    }
-  });
-
-  $effect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('marketing-engine-swot', JSON.stringify(data));
-    }
-  });
-
   function addItem() {
     if (newItem.trim()) {
       const q = activeQuadrant.value;
-      data[q] = [...data[q], newItem.trim()];
+      const updatedSwot = { ...data };
+      updatedSwot[q] = [...updatedSwot[q], newItem.trim()];
+      engineStore.updateStrategy({ swot: updatedSwot });
       newItem = "";
     }
   }
 
   function removeItem(quadrant: keyof SwotData, index: number) {
-    data[quadrant] = data[quadrant].filter((_, i) => i !== index);
+    const updatedSwot = { ...data };
+    updatedSwot[quadrant] = updatedSwot[quadrant].filter((_, i) => i !== index);
+    engineStore.updateStrategy({ swot: updatedSwot });
   }
 
   function exportData() {

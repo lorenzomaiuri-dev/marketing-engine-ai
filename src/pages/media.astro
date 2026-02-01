@@ -1,65 +1,36 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CommunicationLab from '../features/media/components/CommunicationLab.svelte';
+import TheoryCopilot from '../components/TheoryCopilot.svelte';
 import { getEntry } from 'astro:content';
 
 const mediaIntro = await getEntry('marketing', '04-communication-digital');
-const { Content } = mediaIntro ? await mediaIntro.render() : { Content: () => null };
 ---
 
-<BaseLayout title="Communication Hub">
-  <div class="max-w-7xl mx-auto mt-12 mb-24 px-4">
+<BaseLayout title="Go-to-Market">
+  <div class="max-w-6xl mx-auto mt-12 mb-24 px-4">
     
     <!-- Header Section -->
-    <header class="text-center mb-16">
-      <div class="inline-block px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 font-mono text-xs uppercase tracking-widest mb-4">
-        Module 04: Digital Communication
+    <header class="mb-16">
+      <div class="inline-block px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 font-mono text-[10px] uppercase tracking-[0.2em] mb-4">
+        Phase 04: Launch & Communication
       </div>
-      <h1 class="text-5xl font-black text-white tracking-tight mb-4">
-        {mediaIntro?.data.title}
+      <h1 class="text-6xl font-black text-white tracking-tighter mb-4">
+        Launch the <span class="text-indigo-500">Campaign</span>.
       </h1>
-      <p class="text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
-        Strategize your digital presence, optimize for search engines, and maximize social engagement.
+      <p class="text-xl text-slate-400 max-w-2xl leading-relaxed">
+        Strategize your digital presence, optimize for search engines, and simulate the impact of your communication.
       </p>
     </header>
 
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-      <!-- Theory Section (Left) -->
-      <article class="lg:col-span-5 prose prose-invert prose-indigo max-w-none bg-slate-900/30 border border-slate-800/60 p-8 rounded-3xl backdrop-blur-sm relative overflow-hidden group hover:border-indigo-500/30 transition-colors">
-        <div class="absolute top-0 right-0 p-8 opacity-5">
-           <svg class="w-24 h-24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M18 8A3 3 0 0 0 15 5 3 3 0 0 0 12 8 3 3 0 0 0 9 5 3 3 0 0 0 6 8a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0 3 3 3 3 0 0 0 3-3z"/><path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        </div>
-        <Content />
-      </article>
-
-      <!-- Lab Section (Right) -->
-      <section class="lg:col-span-7">
-        <div class="flex items-center gap-4 mb-8">
-          <h2 class="text-sm font-bold uppercase tracking-[0.2em] text-slate-500 whitespace-nowrap">Communication Lab</h2>
-          <div class="h-px flex-1 bg-gradient-to-r from-slate-800 to-transparent"></div>
-        </div>
-
-        <div class="space-y-12">
-          <div id="communication-lab">
-            <div class="mb-6">
-              <h3 class="text-2xl font-bold text-white flex items-center gap-2">
-                <span class="w-8 h-8 rounded-lg bg-indigo-500/20 border border-indigo-500/40 flex items-center justify-center text-indigo-400 text-sm">04</span>
-                Strategic Analyzer
-              </h3>
-              <p class="text-slate-400 text-sm mt-1 ml-10">Test your SEO visibility, simulate social reach, and measure content impact.</p>
-            </div>
-            <CommunicationLab client:load />
-          </div>
-        </div>
-
-        <div class="mt-12 p-8 bg-gradient-to-br from-indigo-600/10 to-transparent border border-indigo-500/20 rounded-2xl text-center relative overflow-hidden">
-          <div class="absolute -bottom-6 -right-6 w-32 h-32 bg-indigo-500/10 rounded-full blur-3xl"></div>
-          <p class="text-lg text-indigo-200 font-serif italic relative z-10">
-            "Contents always make the difference. Effective communication is the bridge between the product and its perceived value." 
-          </p>
-        </div>
-      </section>
+    <div class="space-y-12">
+      <CommunicationLab client:load />
     </div>
-  </div>
+
+    <TheoryCopilot 
+        client:load 
+        moduleName="Media" 
+        theoryHtml={mediaIntro?.body || ''} 
+    />
   </div>
 </BaseLayout>

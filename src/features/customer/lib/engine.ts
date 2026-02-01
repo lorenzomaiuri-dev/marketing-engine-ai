@@ -77,6 +77,34 @@ export class CustomerIntelligenceEngine {
     }
   }
 
+  async analyzeStrategy(context: any): Promise<string> {
+    if (!this.engine) await this.init();
+    this.state.set("generating");
+
+    const prompt = `As a Strategic Marketing Expert, analyze this business plan:
+    Context: ${JSON.stringify(context)}
+    
+    Provide 3 concise, actionable insights (max 20 words each) regarding:
+    1. SWOT Consistency
+    2. Pricing Strategy
+    3. Target Alignment
+    
+    Format: Return ONLY the 3 insights separated by newlines. No intro.`;
+
+    try {
+      const response = await this.engine?.chat.completions.create({
+        messages: [{ role: "user", content: prompt }],
+        temperature: 0.3,
+        max_tokens: 200
+      });
+      this.state.set("ready");
+      return response?.choices[0].message.content || "Could not generate insights.";
+    } catch (error) {
+      this.state.set("ready");
+      return "AI Audit temporarily unavailable.";
+    }
+  }
+
   private mapToStructure(data: any): any {
     return {
       name: data.name || "Target Persona",

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { engineStore } from '../../../lib/stores/engineStore';
   import type { MarketingMix } from '../types';
   import * as Card from "@/lib/components/ui/card";
   import * as Tabs from "@/lib/components/ui/tabs";
@@ -8,16 +8,7 @@
   import { Label } from "@/lib/components/ui/label";
   import { Package, Tag, MapPin, Megaphone, Download } from "@lucide/svelte";
 
-  let {
-    mix: initialMix
-  }: { mix?: MarketingMix } = $props();
-
-  let mix = $state(initialMix || {
-    product: "",
-    price: "",
-    place: "",
-    promotion: ""
-  });
+  let mix = $derived($engineStore.strategy.marketingMix);
 
   const pTheory = {
     product: "The solution to a consumer problem. Focus on unique value propositions.",
@@ -26,26 +17,10 @@
     promotion: "Communication strategy. How the value is conveyed to the target audience."
   };
 
-  onMount(() => {
-    const saved = localStorage.getItem('marketing-engine-mix');
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        mix.product = parsed.product || "";
-        mix.price = parsed.price || "";
-        mix.place = parsed.place || "";
-        mix.promotion = parsed.promotion || "";
-      } catch (e) {
-        console.error("Failed to load Marketing Mix data", e);
-      }
-    }
-  });
-
-  $effect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('marketing-engine-mix', JSON.stringify(mix));
-    }
-  });
+  function updateMix(field: keyof MarketingMix, value: string) {
+    const updatedMix = { ...mix, [field]: value };
+    engineStore.updateStrategy({ marketingMix: updatedMix });
+  }
 
   function exportData() {
     const blob = new Blob([JSON.stringify(mix, null, 2)], { type: 'application/json' });
@@ -109,7 +84,8 @@
             <Textarea 
               id={p}
               placeholder={`Define how your ${p} strategy addresses SWOT factors...`} 
-              bind:value={mix[p as keyof MarketingMix]}
+              value={mix[p as keyof MarketingMix]}
+              oninput={(e) => updateMix(p as keyof MarketingMix, e.currentTarget.value)}
               class="bg-slate-950/50 border-slate-800 rounded-2xl min-h-[160px] text-slate-200 placeholder:text-slate-600 focus:ring-blue-500/50 transition-all p-4 leading-relaxed"
               aria-label={`${p} strategy description`}
             />

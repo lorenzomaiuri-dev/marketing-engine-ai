@@ -3,6 +3,7 @@ import { render, fireEvent, cleanup, waitFor } from '@testing-library/svelte';
 import { tick } from 'svelte';
 import SwotCanvas from './components/SwotCanvas.svelte';
 import MarketingMixModeler from './components/MarketingMixModeler.svelte';
+import { engineStore } from '../../lib/stores/engineStore';
 
 // Mock localStorage
 const localStorageMock = (() => {
@@ -20,12 +21,8 @@ describe('SwotCanvas Component', () => {
   beforeEach(() => {
     cleanup();
     localStorageMock.clear();
+    engineStore.reset();
   });
-
-  // it('renders correctly', () => {
-  //   const { getByText } = render(SwotCanvas);
-  //   expect(getByText('Strategic Lab')).toBeTruthy();
-  // });
 
   it('adds a new strength correctly', async () => {
     const { getByPlaceholderText, findByText, getByLabelText } = render(SwotCanvas);
@@ -62,6 +59,7 @@ describe('MarketingMixModeler Component', () => {
   beforeEach(() => {
     cleanup();
     localStorageMock.clear();
+    engineStore.reset();
   });
 
   it('updates product strategy correctly', async () => {
@@ -79,7 +77,8 @@ describe('MarketingMixModeler Component', () => {
     const productTextarea = getByLabelText('product strategy description');
     await fireEvent.input(productTextarea, { target: { value: 'Persisted strategy' } });
     
-    const saved = JSON.parse(localStorage.getItem('marketing-engine-mix') || '{}');
-    expect(saved.product).toBe('Persisted strategy');
+    const saved = JSON.parse(localStorage.getItem('marketing_engine_state') || '{}');
+    expect(saved.strategy.marketingMix.product).toBe('Persisted strategy');
   });
 });
+

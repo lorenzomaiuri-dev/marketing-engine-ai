@@ -1,5 +1,6 @@
 <script lang="ts">
   import { engineService } from '../lib/engine';
+  import { engineStore } from '../../../lib/stores/engineStore';
   import type { BuyerPersona } from '../types';
   import * as Card from "@/lib/components/ui/card";
   import { Button } from "@/lib/components/ui/button";
@@ -27,7 +28,7 @@
   const progress = engineService.progress;
 
   let businessContext = $state("");
-  let generatedPersona = $state<BuyerPersona | null>(null);
+  let generatedPersona = $derived($engineStore.persona);
   let error = $state<string | null>(null);
 
   async function initializeEngine() {
@@ -44,7 +45,8 @@
     error = null;
     try {
       const result = await engineService.generatePersona(businessContext);
-      generatedPersona = JSON.parse(result);
+      const persona = JSON.parse(result);
+      engineStore.updatePersona(persona);
     } catch (e) {
       error = "Failed to generate persona. Ensure WebGPU is enabled in your browser.";
       console.error(e);
@@ -52,20 +54,13 @@
   }
 
   function loadFromStrategy() {
-    const swot = localStorage.getItem('marketing-engine-swot');
-    const mix = localStorage.getItem('marketing-engine-mix');
-    
+    const state = $engineStore.strategy;
     let context = "";
-    if (swot) {
-        const s = JSON.parse(swot);
-        if (s.strengths?.length) context += `Strengths: ${s.strengths.join(', ')}. `;
-        if (s.opportunities?.length) context += `Opportunities: ${s.opportunities.join(', ')}. `;
-    }
-    if (mix) {
-        const m = JSON.parse(mix);
-        if (m.product) context += `Product: ${m.product}. `;
-        if (m.promotion) context += `Marketing Strategy: ${m.promotion}. `;
-    }
+    
+    if (state.swot.strengths?.length) context += `Strengths: ${state.swot.strengths.join(', ')}. `;
+    if (state.swot.opportunities?.length) context += `Opportunities: ${state.swot.opportunities.join(', ')}. `;
+    if (state.marketingMix.product) context += `Product: ${state.marketingMix.product}. `;
+    if (state.marketingMix.promotion) context += `Marketing Strategy: ${state.marketingMix.promotion}. `;
     
     if (context) {
         businessContext = `Targeting customers for a business with these characteristics: ${context}`;
@@ -73,7 +68,6 @@
         error = "No previous strategy data found. Please enter business details manually.";
     }
   }
-  console.log("Customer Lab Engine Status:", $engineStatus);
 </script>
 
 <div class="space-y-8 animate-in fade-in duration-700">

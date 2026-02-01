@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { engineStore } from '../../../lib/stores/engineStore';
   import * as Card from "@/lib/components/ui/card";
   import { Button } from "@/lib/components/ui/button";
   import { Input } from "@/lib/components/ui/input";
@@ -25,31 +26,30 @@
   import { analyzeSEO, analyzeSocial, calculateOmnichannelScore, analyzeContentSmart, calculateROIPotential } from '../lib/analyzers';
   import type { CommunicationPlan } from '../types';
 
-  let plan = $state<CommunicationPlan>({
-    seo: {
-      title: "Marketing Engine AI | Communication Hub",
-      description: "Master digital communication strategies, SEO optimization, and social media engagement with our advanced marketing intelligence suite.",
-      keywords: "marketing, seo, digital strategy"
-    },
-    social: {
-      reach: 5000,
-      interactions: 250,
-      cost: 150
-    },
-    omnichannel: {
-      web: true,
-      social: true,
-      email: false,
-      offline: false
-    },
-    content: "Discover our revolutionary new platform! Join now to transform your marketing strategy with proven secrets and instant results."
-  });
+  let plan = $derived($engineStore.media);
 
   const seoAnalysis = $derived(analyzeSEO(plan.seo));
   const socialAnalysis = $derived(analyzeSocial(plan.social));
   const roiPotential = $derived(calculateROIPotential(plan.social));
   const omnichannelScore = $derived(calculateOmnichannelScore(plan.omnichannel));
   const contentAnalysis = $derived(analyzeContentSmart(plan.content));
+
+  function updateSEO(field: string, value: string) {
+    engineStore.updateMedia({ seo: { ...plan.seo, [field]: value } });
+  }
+
+  function updateSocial(field: string, value: number) {
+    engineStore.updateMedia({ social: { ...plan.social, [field]: value } });
+  }
+
+  function toggleOmnichannel(channel: string) {
+    const omnichannel = { ...plan.omnichannel, [channel]: !plan.omnichannel[channel as keyof typeof plan.omnichannel] };
+    engineStore.updateMedia({ omnichannel });
+  }
+
+  function updateContent(content: string) {
+    engineStore.updateMedia({ content });
+  }
 
   function getStatusColor(status: 'ideal' | 'warning' | 'critical') {
     switch (status) {
@@ -102,7 +102,8 @@
               </div>
               <Input 
                 id="title" 
-                bind:value={plan.seo.title} 
+                value={plan.seo.title} 
+                oninput={(e) => updateSEO('title', e.currentTarget.value)}
                 class="bg-slate-900 border-slate-800 focus:ring-emerald-500/50"
               />
             </div>
@@ -115,7 +116,8 @@
               </div>
               <Textarea 
                 id="desc" 
-                bind:value={plan.seo.description} 
+                value={plan.seo.description} 
+                oninput={(e) => updateSEO('description', e.currentTarget.value)}
                 class="bg-slate-900 border-slate-800 focus:ring-emerald-500/50 h-24"
               />
             </div>
@@ -148,19 +150,19 @@
               <Label class="text-slate-400 flex items-center">
                 <Globe class="w-3.5 h-3.5 mr-2" /> Estimated Reach
               </Label>
-              <Input type="number" bind:value={plan.social.reach} class="bg-slate-900 border-slate-800" />
+              <Input type="number" value={plan.social.reach} oninput={(e) => updateSocial('reach', parseFloat(e.currentTarget.value))} class="bg-slate-900 border-slate-800" />
             </div>
             <div class="space-y-2">
               <Label class="text-slate-400 flex items-center">
                 <TrendingUp class="w-3.5 h-3.5 mr-2" /> Interactions
               </Label>
-              <Input type="number" bind:value={plan.social.interactions} class="bg-slate-900 border-slate-800" />
+              <Input type="number" value={plan.social.interactions} oninput={(e) => updateSocial('interactions', parseFloat(e.currentTarget.value))} class="bg-slate-900 border-slate-800" />
             </div>
             <div class="space-y-2">
               <Label class="text-slate-400 flex items-center">
                 <DollarSign class="w-3.5 h-3.5 mr-2" /> Total Cost ($)
               </Label>
-              <Input type="number" bind:value={plan.social.cost} class="bg-slate-900 border-slate-800" />
+              <Input type="number" value={plan.social.cost} oninput={(e) => updateSocial('cost', parseFloat(e.currentTarget.value))} class="bg-slate-900 border-slate-800" />
             </div>
           </Card.Content>
         </Card.Root>
@@ -211,7 +213,7 @@
           <div class="grid grid-cols-2 gap-4">
             {#each Object.entries(plan.omnichannel) as [channel, active]}
               <button 
-                onclick={() => plan.omnichannel[channel as keyof typeof plan.omnichannel] = !active}
+                onclick={() => toggleOmnichannel(channel)}
                 class="flex items-center justify-between p-4 rounded-2xl border transition-all {active ? 'bg-violet-500/10 border-violet-500/50 text-white' : 'bg-slate-900/40 border-slate-800 text-slate-500'}"
               >
                 <div class="flex flex-col items-start">
@@ -248,7 +250,8 @@
         </Card.Header>
         <Card.Content class="space-y-6">
           <Textarea 
-            bind:value={plan.content} 
+            value={plan.content} 
+            oninput={(e) => updateContent(e.currentTarget.value)}
             placeholder="Type your marketing copy here..."
             class="bg-slate-900 border-slate-800 h-32 focus:ring-amber-500/50"
           />

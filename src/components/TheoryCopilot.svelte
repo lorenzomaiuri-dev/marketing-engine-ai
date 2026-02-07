@@ -7,6 +7,7 @@
   import { Separator } from "$lib/components/ui/separator";
   import { Sparkles, BookOpen, AlertCircle, CheckCircle2, Loader, BrainCircuit } from "@lucide/svelte";
   import { slide, fade } from 'svelte/transition';
+  import { marked } from 'marked';
 
   let { theoryHtml, moduleName } = $props();
 
@@ -15,6 +16,8 @@
   let isAnalyzing = $state(false);
   
   const engineStatus = engineService.state;
+
+  const renderedTheoryHtml = $derived(marked.parse(theoryHtml || ''));
 
   // Logic-based "Kotler" validation
   let insights = $derived.by(() => {
@@ -129,7 +132,7 @@
           <div class="space-y-3">
             <h4 class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Contextual Theory</h4>
             <div class="prose prose-invert prose-sm max-w-none opacity-80 text-slate-300">
-              {@html theoryHtml}
+              {@html renderedTheoryHtml}
             </div>
           </div>
         </Card.Content>

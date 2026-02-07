@@ -31,7 +31,7 @@ import { Badge } from '@/lib/components/ui/badge';
       </p>
 
       <div class="flex flex-col sm:flex-row items-center justify-center gap-4 animate-in fade-in slide-in-from-bottom-10 duration-700 delay-300">
-        <a href="/strategy" class={buttonVariants({ size: 'lg', class: 'h-14 px-8 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold shadow-xl shadow-blue-600/20 group' })}>
+        <a href={`${import.meta.env.BASE_URL}/strategy`} class={buttonVariants({ size: 'lg', class: 'h-14 px-8 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold shadow-xl shadow-blue-600/20 group' })}>
           Enter the Lab <ArrowRight class="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
         </a>
         <a href="#modules" class={buttonVariants({ variant: 'outline', size: 'lg', class: 'h-14 px-8 rounded-2xl border-slate-800 bg-slate-900/50 hover:bg-slate-800 text-slate-300 font-bold' })}>
@@ -44,7 +44,7 @@ import { Badge } from '@/lib/components/ui/badge';
   <section id="modules" class="py-24">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       <!-- Strategic Lab -->
-      <a href="/strategy" class="group p-8 rounded-3xl bg-slate-900/40 border border-slate-800/50 hover:border-blue-500/40 hover:bg-slate-900/60 transition-all">
+      <a href={`${import.meta.env.BASE_URL}/strategy`} class="group p-8 rounded-3xl bg-slate-900/40 border border-slate-800/50 hover:border-blue-500/40 hover:bg-slate-900/60 transition-all">
         <div class="w-12 h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-400 mb-6 group-hover:scale-110 transition-transform">
           <Target class="w-6 h-6" />
         </div>
@@ -58,7 +58,7 @@ import { Badge } from '@/lib/components/ui/badge';
       </a>
 
       <!-- Customer AI -->
-      <a href="/customer" class="group p-8 rounded-3xl bg-slate-900/40 border border-slate-800/50 hover:border-blue-500/40 hover:bg-slate-900/60 transition-all">
+      <a href={`${import.meta.env.BASE_URL}/customer`} class="group p-8 rounded-3xl bg-slate-900/40 border border-slate-800/50 hover:border-blue-500/40 hover:bg-slate-900/60 transition-all">
         <div class="w-12 h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center text-amber-400 mb-6 group-hover:scale-110 transition-transform">
           <Users class="w-6 h-6" />
         </div>
@@ -72,7 +72,7 @@ import { Badge } from '@/lib/components/ui/badge';
       </a>
 
       <!-- Digital Transition -->
-      <a href="/digital" class="group p-8 rounded-3xl bg-slate-900/40 border border-slate-800/50 hover:border-emerald-500/40 hover:bg-slate-900/60 transition-all">
+      <a href={`${import.meta.env.BASE_URL}/digital`} class="group p-8 rounded-3xl bg-slate-900/40 border border-slate-800/50 hover:border-emerald-500/40 hover:bg-slate-900/60 transition-all">
         <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 mb-6 group-hover:scale-110 transition-transform">
           <Globe class="w-6 h-6" />
         </div>
@@ -86,7 +86,7 @@ import { Badge } from '@/lib/components/ui/badge';
       </a>
 
       <!-- Media Hub -->
-      <a href="/media" class="group p-8 rounded-3xl bg-slate-900/40 border border-slate-800/50 hover:border-indigo-500/40 hover:bg-slate-900/60 transition-all">
+      <a href={`${import.meta.env.BASE_URL}/media`} class="group p-8 rounded-3xl bg-slate-900/40 border border-slate-800/50 hover:border-indigo-500/40 hover:bg-slate-900/60 transition-all">
         <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 mb-6 group-hover:scale-110 transition-transform">
           <Share2 class="w-6 h-6" />
         </div>
